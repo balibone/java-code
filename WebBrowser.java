@@ -3,7 +3,8 @@ import java.util.*;
 
 /* WebBrowser Simulator:
 	
-	This program simulates a web browser with a browsing history log through the user of stacks.*/
+	This program simulates a web browser with a browsing history log through the use of stacks.
+	*/
 public class WebBrowser {
 	public WebBrowser(Scanner sc) {
 		Stack<String> s1=new Stack<>();

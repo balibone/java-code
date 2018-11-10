@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Stack;
 
 /*
@@ -23,7 +24,7 @@ class EvaluateMathExpressionString {
     private static Stack<Character> operators = new Stack<>();
 
     public static void main(String[] args) {
-        String expression = "   1 x ((3 + 4) / (2 + 5)) ";
+        String expression = "   5 x ((144 x 2) / (12 + 12)) ";
         System.out.println("Answer: " + evaluateExpression(expression));
     }
 
@@ -33,7 +34,7 @@ class EvaluateMathExpressionString {
         char[] characters = exp.toCharArray();
 
         // step 1 : parse and pre-evaluate if neccessary
-        for (int index = 0; index < characters.length; index++) {
+        for (int index = 0; index < characters.length;) {
             // How to parse numbers:
             // Going from left to right, if we hit a single digit number, assume
             // that the next character is also part of that number (its next digit),
@@ -42,11 +43,20 @@ class EvaluateMathExpressionString {
             if (Character.isDigit(characters[index])) {
                 operandToPush += characters[index];
                 // keep getting next digit
-                for (int next = index + 1; Character.isDigit(characters[next]); next++) {
+                int next = index + 1;
+                while (Character.isDigit(characters[next])) {
                     operandToPush += characters[next];
+                    // the last "next" will be a non-digit, hence must be
+                    // the next location for the outer loop
+                    next++;
                 }
+                index = next;
                 // push final number
+                System.out.println("pushing operand '" + operandToPush + "' ...");
                 pushOperand(Integer.parseInt(operandToPush));
+                System.out.println("operands: " + Arrays.toString(operands.toArray()));
+                System.out.println("operators: " + Arrays.toString(operators.toArray()));
+
                 // reset
                 operandToPush = "";
             } else {
@@ -54,12 +64,21 @@ class EvaluateMathExpressionString {
                 // All operators are single characters. so if we come across anything that is
                 // not a digit, means its an operator. Only closing brackets require
                 // special treatment before pushing to stack.
+                System.out.println("pushing operator '" + characters[index] + "' ...");
                 pushOperator(characters[index]);
+                System.out.println("operands: " + Arrays.toString(operands.toArray()));
+                System.out.println("operators: " + Arrays.toString(operators.toArray()));
+                index++;
             }
         }
+        System.out.println("After step 1: ");
+        System.out.println("operands: " + Arrays.toString(operands.toArray()));
+        System.out.println("operators: " + Arrays.toString(operators.toArray()));
         // step 2: exhaust operator stack and evaluate along the way
         while (!operators.isEmpty()) {
             evaluate();
+            System.out.println("operands: " + Arrays.toString(operands.toArray()));
+            System.out.println("operators: " + Arrays.toString(operators.toArray()));
         }
         answer = operands.peek().toString();
         return answer;
@@ -69,25 +88,24 @@ class EvaluateMathExpressionString {
     // pre-evaluation
     // if necessary.
     private static void pushOperand(int operand) {
-        if (operators.isEmpty()) {
-            return;
-        }
-        char top = operators.peek();
         int toPush = operand;
 
         // if current top operator is x or /, pre-evaluate and pop that operator.
-        int firstOp = 0;
-        switch (top) {
-        case 'x':
-            firstOp = operands.pop();
-            toPush = firstOp * operand;
-            operators.pop();
-            break;
-        case '/':
-            firstOp = operands.pop();
-            toPush = firstOp / operand;
-            operators.pop();
-            break;
+        if (!operators.isEmpty()) {
+            int firstOp = 0;
+            char topOperator = operators.peek();
+            switch (topOperator) {
+            case 'x':
+                firstOp = operands.pop();
+                toPush = firstOp * operand;
+                operators.pop();
+                break;
+            case '/':
+                firstOp = operands.pop();
+                toPush = firstOp / operand;
+                operators.pop();
+                break;
+            }
         }
 
         // finally, push for real
@@ -122,6 +140,9 @@ class EvaluateMathExpressionString {
     // Final result is then pushed to operand stack. (i.e. 6)
     private static void evaluate() {
         char operator = operators.pop();
+        if (operands.size() <= 1) {
+            return;
+        }
         int op2 = operands.pop();
         int op1 = operands.pop();
         switch (operator) {

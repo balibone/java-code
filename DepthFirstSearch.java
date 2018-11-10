@@ -17,16 +17,14 @@ class DepthFirstSearch {
 
     }
 
-    public static void main(String[] args) {
-        TreeNode head = new TreeNode(0, null, null);
-        depthFirstSearchIter(head, 0);
-        depthFirstSearchRecursive(head, 0);
-    }
-
-    // iterative depth first search using the right leaves stack trick.
+    // depthFirstSearchIter performs an iterative depth first search on a binary
+    // tree,
+    // given a reference to the head of the tree.
+    // it uses a stack to keep track of the right leaves as it goes down each level.
+    // this provides a "reference" to go down the right side once the left side
+    // has been exhausted.
     private static boolean depthFirstSearchIter(TreeNode node, int val) {
-        // ArrayList<TreeNode> rightLeaves = new ArrayList<>();
-        // IF GONNA USE QUEUE OR STACK, can just use Linked List.
+        // Note to self: for stacks and queues, can just use a LinkedLists.
         Stack<TreeNode> rightLeaves = new Stack<>();
         while (node != null) {
             if (node.val == val) {
@@ -47,7 +45,7 @@ class DepthFirstSearch {
         return false;
     }
 
-    // recursive dfs
+    // depthFirstSearchRecursive performs the standard recursive dfs.
     private static boolean depthFirstSearchRecursive(TreeNode node, int val) {
         if (node == null) {
             return false;

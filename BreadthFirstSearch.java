@@ -7,10 +7,8 @@ class BreadthFirstSearch {
         TreeNode right;
     }
 
-    public static void main(String[] args) {
-
-    }
-
+    // bfs performs a breadth first search on a binary tree, given a reference to
+    // the root node and a value to be searched.
     public static boolean bfs(TreeNode node, int val) {
         if (node == null) {
             return false;

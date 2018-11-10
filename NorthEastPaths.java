@@ -15,19 +15,19 @@ public class NEpaths {
         System.out.println("Number of paths = " + ne(rows, cols, path));
     }
 
-    // To compute the number of NE paths as well as to display the paths
+    // ne computes the number of NE paths as well as displays the paths
     public static int ne(int rows, int cols, String path) {
         // fill in your code here
-        if(rows==0 && cols==0){//reached destination, one possible path
+        if (rows == 0 && cols == 0) {// reached destination, one possible path
             System.out.println(path);
             return 1;
         }
-        if(rows==0){
-            return ne(rows,cols-1,path+"E ");//keep travelling east
+        if (rows == 0) {
+            return ne(rows, cols - 1, path + "E ");// keep travelling east
         }
-        if(cols==0){
-            return ne(rows-1,cols,path+"N ");//keep travelling north
+        if (cols == 0) {
+            return ne(rows - 1, cols, path + "N ");// keep travelling north
         }
-        return ne(rows-1,cols,path+"N ")+ne(rows,cols-1,path+"E ");
+        return ne(rows - 1, cols, path + "N ") + ne(rows, cols - 1, path + "E ");
     }
 }

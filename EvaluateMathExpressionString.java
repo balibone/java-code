@@ -14,13 +14,13 @@ x (multiply),
 */
 class EvaluateMathExpressionString {
     // 1 stack of integers to keep all operands.
-    private static Stack operands = new Stack<>();
+    private static Stack<Integer> operands = new Stack<>();
     // variable that will be used to append multiple digits together during parsing
     // of
     // multi-digit number strings.
     private static String operandToPush = "";
     // 1 stack of characters to keep all operators.
-    private static Stack operators = new Stack<>();
+    private static Stack<Character> operators = new Stack<>();
 
     public static void main(String[] args) {
         String expression = "   1 x ((3 + 4) / (2 + 5)) ";
@@ -42,7 +42,7 @@ class EvaluateMathExpressionString {
             if (Character.isDigit(characters[index])) {
                 operandToPush += characters[index];
                 // keep getting next digit
-                for (int next = index + 1; Characters.isDigit(characters[next]); next++) {
+                for (int next = index + 1; Character.isDigit(characters[next]); next++) {
                     operandToPush += characters[next];
                 }
                 // push final number
@@ -72,18 +72,18 @@ class EvaluateMathExpressionString {
         if (operators.isEmpty()) {
             return;
         }
-        String top = operators.peek();
+        char top = operators.peek();
         int toPush = operand;
 
         // if current top operator is x or /, pre-evaluate and pop that operator.
         int firstOp = 0;
         switch (top) {
-        case "x":
+        case 'x':
             firstOp = operands.pop();
             toPush = firstOp * operand;
             operators.pop();
             break;
-        case "/":
+        case '/':
             firstOp = operands.pop();
             toPush = firstOp / operand;
             operators.pop();
@@ -102,7 +102,7 @@ class EvaluateMathExpressionString {
         if (operator == ')') {
             // evaluate all expressions in parantheses
             while (!operators.isEmpty()) {
-                top = operators.peek();
+                char top = operators.peek();
                 // if we hit an opening bracket, stop evaluating.
                 if (top == '(') {
                     operators.pop();
